@@ -2,7 +2,7 @@
 const inquirer = require('inquirer');
 const db = require('./db/connections');
 const cTable = require('console.table');
-const {mainQuestion,updateEmployeeQuestions} = require('./src/questions.js');
+const {mainQuestion,updateEmployeeQuestions, departmentQuestions} = require('./src/questions.js');
 
 function mainMenu(){
     let sql = '';
@@ -12,7 +12,7 @@ function mainMenu(){
                         
     // Update Employee Role
     // Add Role
-    // Add Department
+    
         //{ mainQ: 'exit' }
         switch(mainAnswer.mainQ){
             case 'Exit':
@@ -62,7 +62,24 @@ function mainMenu(){
                 });
                 break;
 
-
+            // Add Department
+            case 'Add Department':
+                inquirer.prompt(departmentQuestions)
+                .then(deptAnswers => {
+                    //need to add some validation (not blank, etc)
+                    sql = `INSERT INTO department (name) VALUES (?)`;
+                    params = deptAnswers.departmentName;
+                    db.query(sql, params, (err, rows) => {
+                        if (err) {
+                        console.log({ error: err.message });
+                        return;
+                        }
+                        console.log(deptAnswers.departmentName + " Added!");
+                        return mainMenu();
+                    // console.log(deptAnswers);
+                   });
+                });
+                break;
                
             // default:
             //     mainMenu();
