@@ -2,7 +2,7 @@
 const inquirer = require('inquirer');
 const db = require('./db/connections');
 const cTable = require('console.table');
-const {mainQuestion,updateEmployeeQuestions, departmentQuestions} = require('./src/questions.js');
+const {mainQuestion,updateEmployeeQuestions, departmentQuestions, roleQuestions} = require('./src/questions.js');
 
 function mainMenu(){
     let sql = '';
@@ -30,6 +30,7 @@ function mainMenu(){
                     console.table(rows);
                     return mainMenu();
                 });
+                sql = ``;
                 break;
 
             // View All Roles
@@ -79,8 +80,49 @@ function mainMenu(){
                     // console.log(deptAnswers);
                    });
                 });
+                sql = ``;
                 break;
-               
+
+            // Add Role
+            case 'Add Role':
+                inquirer.prompt(roleQuestions)
+                .then(roleAnswers => {
+                    //need to add some validation (not blank, etc)
+                    sql = `SELECT id FROM department d WHERE d.name = ?`
+                    // params = [JSON.stringify(roleAnswers.departmentName)];
+                    params = [roleAnswers.departmentName];
+                    db.query(sql, params, (err1, rows1) => {
+                        console.log(rows1[0]); //[ { id: 1 } ] //rows1.id == undefined
+                        if (err1) {
+                            console.log({ error: err.message });
+                            return;
+                        }
+                        if (rows1[0]){
+                            sql = `INSERT INTO role (title, salary, salary_type, department_id) VALUES (?,?,?,?)`;
+                            params = [roleAnswers.roleTitle, roleAnswers.salary, roleAnswers.salaryType, rows1[0].id];
+                            //console.log(sql);
+                            //console.log(params);
+                            db.query(sql, params, (err, rows) => {
+                                if (err) {
+                                console.log({ error: err.message });
+                                return;
+                                }
+                                console.log(roleAnswers.roleTitle + " Added!");
+                                return mainMenu();
+                            // console.log(deptAnswers);
+                           });
+    
+                        } else {
+                            console.log("Department Not Found!");
+                            return mainMenu();
+                        }
+                   });
+
+
+
+                });
+                sql = ``;
+                break;               
             // default:
             //     mainMenu();
         }
