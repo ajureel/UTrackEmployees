@@ -28,7 +28,7 @@ const mainQuestion = [
         
 ];
         
-//credits
+//employee
 const updateEmployeeQuestions = [
     {
     type: 'input',
@@ -51,7 +51,17 @@ const updateEmployeeQuestions = [
     message: "Who is the employee's Manager?"
     }
 ];
+
+//department
+const departmentQuestions = [
+    {
+    type: 'input',
+    name: 'departmentName',
+    message: "What is the department's name?"
+    }
+];
             
 exports.mainQuestion = mainQuestion ;   
 exports.updateEmployeeQuestions = updateEmployeeQuestions ; 
+exports.departmentQuestions = departmentQuestions ; 
     
