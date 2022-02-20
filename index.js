@@ -2,10 +2,11 @@
 const inquirer = require('inquirer');
 const db = require('./db/connections');
 const cTable = require('console.table');
-const {mainQuestion,employeeQuestions, departmentQuestions, roleQuestions} = require('./src/questions.js');
+const {mainQuestion,employeeQuestions, departmentQuestions, roleQuestions, updateEmpQuestions} = require('./src/questions.js');
 const deptFn = require('./utils/department.js');
 const empFn = require('./utils/employee.js');
 const roleFn = require('./utils/role');
+const { update } = require('lodash');
 
 function objLog (name, obj){
     console.log (name + ": ");
@@ -181,7 +182,33 @@ function mainMenu(){
                     sql = ``;
                     return mainMenu();
                 });
-                break;               
+                break;  
+
+            // Update Employee Role
+            case 'Update Employee Role':
+                let empID = '';
+                let roleID = '';
+                let newRole = ''; 
+                inquirer.prompt(updateEmpQuestions)
+                .then(employeeAnswers => {
+                    newRole = employeeAnswers.empRole;
+                    return empFn.getEmpByName(employeeAnswers.firstName, employeeAnswers.lastName, "Employee");  
+                })
+                .then (foundID =>{
+                    empID = foundID;
+                    return roleFn.getRoleIDByTitle(newRole);
+                })
+                .then(newRoleID =>{
+                    roleID = newRoleID;
+                    return empFn.updateEmpRole(empID,roleID);
+                })
+                .then (outcome =>{
+                    console.log("Updated!");
+                    return mainMenu();
+                });
+                
+                break;
+            
             }
         })
 
