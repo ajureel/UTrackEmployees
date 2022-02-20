@@ -52,6 +52,27 @@ const employeeQuestions = [
     }
 ];
 
+//employee
+const updateEmpQuestions = [
+    {
+    type: 'input',
+    name: 'firstName',
+    message: "What is the employee's first name?"
+    }
+    ,
+    {
+    type: 'input',
+    name: 'lastName',
+    message: "What is the employee's last name?"
+    }
+    ,
+    {
+    type: 'input',
+    name: 'empRole',
+    message: "What is the employee's new role?"
+    }
+];
+
 //department
 const departmentQuestions = [
     {
@@ -96,3 +117,4 @@ exports.mainQuestion = mainQuestion ;
 exports.employeeQuestions = employeeQuestions ;     
 exports.departmentQuestions = departmentQuestions ; 
 exports.roleQuestions = roleQuestions ;  
+exports.updateEmpQuestions = updateEmpQuestions;
