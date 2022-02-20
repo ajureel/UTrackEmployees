@@ -2,7 +2,16 @@
 const inquirer = require('inquirer');
 const db = require('./db/connections');
 const cTable = require('console.table');
-const {mainQuestion,updateEmployeeQuestions, departmentQuestions, roleQuestions} = require('./src/questions.js');
+const {mainQuestion,employeeQuestions, departmentQuestions, roleQuestions} = require('./src/questions.js');
+const deptFn = require('./utils/department.js');
+const empFn = require('./utils/employee.js');
+const roleFn = require('./utils/role');
+
+function objLog (name, obj){
+    console.log (name + ": ");
+    console.log (obj);
+}
+
 
 function mainMenu(){
     let sql = '';
@@ -123,16 +132,61 @@ function mainMenu(){
                 });
                 sql = ``;
                 break;               
-            // default:
-            //     mainMenu();
-        }
 
-        // if (mainAnswer.mainQ == 'Exit') {
-        //     console.log("Goodbye");
-        //     return process.exit();
-        // }
-        // else {mainMenu()}
-    })
+            // Add Employee
+            case 'Add Employee':
+                let myMgr ='';
+                let myRole = '';
+                let firstName = '';
+                let lastName = '';
+                let empRole = '';
+                inquirer.prompt(employeeQuestions)
+                .then(employeeAnswers => { 
+                     firstName = employeeAnswers.firstName;
+                     lastName = employeeAnswers.lastName;
+                     empRole = employeeAnswers.empRole;
+                    return empFn.getManagerIDbyName (employeeAnswers.empManager);
+                })
+                .then(mgrID => {
+                    objLog("getManagerIDbyName result", mgrID); 
+                    myMgr = mgrID;                   
+                    return roleFn.getRoleIDByTitle(empRole);    
+                })
+                .then(roleID => {
+                    myRole = roleID;
+                    if (myRole && myMgr){
+                        // need to move this into a promise
+                            sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
+                            params = [firstName, lastName, myRole, myMgr];
+                            // console.log(sql);
+                            // console.log(params);
+                            db.query(sql, params, (err, rows) => {
+                                if (err) {
+                                console.log({ error: err.message });
+                                return;
+                                }
+                                //gets logged late
+                                console.log(firstName + " " + lastName + " Added!");
+                                
+                            // console.log(deptAnswers);
+                           });
+    
+                    } else {
+                        console.log("Unable to add employee.  Data Not Found!");
+                        
+                    }
+                    
+                })
+                .then(data => {
+                    sql = ``;
+                    return mainMenu();
+                });
+                break;               
+            }
+        })
+
+
+    
     // .then(data => {
     //     return mainMenu();
     // })
