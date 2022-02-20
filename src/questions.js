@@ -60,8 +60,38 @@ const departmentQuestions = [
     message: "What is the department's name?"
     }
 ];
+
+//role
+//It would be cool to figure out how to automate this and make it a select list for departments
+const roleQuestions = [
+    {
+        type: 'input',
+        name: 'roleTitle',
+        message: "What is the role's title?"
+    },
+    {
+        type: 'input',
+        name: 'departmentName',
+        message: "What is the role's department?"
+    },             
+    {
+        type: 'input',
+        name: 'salary',
+        message: "What is the role's salary?"
+    },
+    {
+        type: 'list',
+        name: 'salaryType',
+        message: "What is the role's salary type?",
+        choices: ['salary', 'hourly'],
+    //   filter(val) {
+    //     return val.toLowerCase();
+    //     }
+    }   
+
+];
             
 exports.mainQuestion = mainQuestion ;   
 exports.updateEmployeeQuestions = updateEmployeeQuestions ; 
 exports.departmentQuestions = departmentQuestions ; 
-    
+exports.roleQuestions = roleQuestions ;     
