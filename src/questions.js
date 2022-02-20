@@ -23,13 +23,13 @@ const mainQuestion = [
         type: 'list',
         name: 'mainQ',
         message: 'What would you like to do? (required)',
-        choices: [ "View All Employees", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department", "Exit"]
+        choices: [ "View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department", "Exit"]
     }
         
 ];
         
 //employee
-const updateEmployeeQuestions = [
+const employeeQuestions = [
     {
     type: 'input',
     name: 'firstName',
@@ -90,8 +90,9 @@ const roleQuestions = [
     }   
 
 ];
+
             
 exports.mainQuestion = mainQuestion ;   
-exports.updateEmployeeQuestions = updateEmployeeQuestions ; 
+exports.employeeQuestions = employeeQuestions ;     
 exports.departmentQuestions = departmentQuestions ; 
-exports.roleQuestions = roleQuestions ;     
+exports.roleQuestions = roleQuestions ;  
